@@ -1,0 +1,23 @@
+# Virtual Environments
+venv/
+.venv/
+env/
+ENV/
+microclimate_system/venv/
+microclimate_system/.venv/
+
+# Python Byte-compiled / Cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyc
+
+# IDEs and Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db

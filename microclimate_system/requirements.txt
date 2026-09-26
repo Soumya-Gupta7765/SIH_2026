@@ -9,3 +9,5 @@ pythermalcomfort
 streamlit
 folium
 streamlit-folium
+matplotlib
+shapely

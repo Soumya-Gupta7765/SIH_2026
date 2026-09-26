@@ -3,10 +3,11 @@ import sys
 import os
 
 def get_python_exec():
-    # Try to use the local virtual environment Python if it exists
-    venv_python = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".venv", "Scripts", "python.exe")
-    if os.path.exists(venv_python):
-        return venv_python
+    base = os.path.dirname(os.path.abspath(__file__))
+    for v in ["venv", ".venv"]:
+        p = os.path.join(base, v, "Scripts", "python.exe")
+        if os.path.exists(p):
+            return p
     return sys.executable
 
 def main():
@@ -25,6 +26,9 @@ def main():
     
     print("\n=== Step 5: Alert Layer ===")
     subprocess.run([py_exec, "alert_layer.py"], check=True)
+
+    print("\n=== Step 6: Ward-Level Geospatial Generation ===")
+    subprocess.run([py_exec, os.path.join("scripts", "generate_ward_data.py")], check=True)
 
 if __name__ == "__main__":
     main()

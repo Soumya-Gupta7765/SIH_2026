@@ -1,0 +1,16 @@
+zone_name,total_slum_clusters,approx_slum_households,slum_density_pct,predominant_roof_type
+Central Delhi,58,24500,18.5,Tin Sheet / Corrugated Metal
+North Delhi,64,29800,16.2,Asbestos / Tin Sheet
+North East Delhi,92,46200,26.8,Tin Sheet / Plastic Tarpaulin
+East Delhi,78,38100,21.4,Corrugated Tin
+New Delhi,12,3400,2.1,Paved Concrete / Masonry
+North West Delhi,85,41200,17.6,Tin Sheet / Brick
+West Delhi,69,32600,14.8,Tin Sheet / Masonry
+South West Delhi,34,15400,7.5,Mixed
+South Delhi,46,21800,8.4,Tin / Paved
+South East Delhi,71,36500,19.3,Tin Sheet / Corrugated
+Shahdara,66,31900,24.1,Tin Sheet / Plastic Sheet
+Gurugram,38,19200,9.2,Tin Sheet / Temporary Shacks
+Noida,31,14800,7.8,Temporary Shacks / Tin
+Faridabad,45,22400,11.5,Tin Sheet
+Ghaziabad,52,26300,13.7,Tin / Brick Sheet

@@ -3,6 +3,8 @@ import numpy as np
 import xgboost as xgb
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error, mean_absolute_error
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import os
 from config import DATA_DIR, MODELS_DIR
