@@ -1,0 +1,3 @@
+timestamp,channel,recipient_type,target_ward,utci_c,severity,citizens_reached,elderly_reached,status,message_snippet
+2026-09-28 04:04:21,Municipal Cell Broadcast (CBS),Ward Residents & Cell Handsets,Ward 012E (East Delhi),36.9,Moderate Risk,260915,23743,Dispatched (200 OK),Enforce hydration breaks for outdoor workers
+2026-09-28 03:24:49,Elderly Advisory Push,Senior Citizens & Caregivers,Ward 012E (East Delhi),41.6,Critical Geriatric Strain,23743,23743,Delivered (200 OK),🔥 HIGH RISK FOR SENIORS: Strict indoor shelter (10am-5pm). Keep windows curtained; apply cool damp towels to neck/wrists...

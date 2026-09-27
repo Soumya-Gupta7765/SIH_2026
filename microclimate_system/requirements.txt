@@ -6,8 +6,9 @@ numpy
 xgboost
 scikit-learn
 pythermalcomfort
-streamlit
+streamlit   
 folium
 streamlit-folium
 matplotlib
 shapely
+plotly

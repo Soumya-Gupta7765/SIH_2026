@@ -42,6 +42,84 @@ def get_risk_tier(utci):
     else:
         return "Safe", "#2e7d32", "✅ NORMAL: Routine conditions, maintain standard municipal water surveillance, no emergency restrictions."
 
+def get_elderly_risk_tier(utci):
+    if utci >= 42.0:
+        return (
+            "Severe Geriatric Danger",
+            "#8b0000",
+            "🚨 CRITICAL FOR SENIORS (60+): Extreme risk of heat-stroke, acute renal strain & cardiovascular collapse. Evacuate to air-conditioned shelter if room exceeds 32°C. Caregivers conduct hourly checks. Sip 200ml ORS every 45 mins. Call 108 immediately for dizziness/confusion."
+        )
+    elif utci >= 37.0:
+        return (
+            "Critical Geriatric Strain",
+            "#e53935",
+            "🔥 HIGH RISK FOR SENIORS: Strict indoor shelter (10am-5pm). Keep windows curtained; apply cool damp towels to neck/wrists. Ensure continuous caregiver hydration prompts (1.5-2L daily). Check blood pressure & review diuretics."
+        )
+    elif utci >= 32.0:
+        return (
+            "Moderate Geriatric Risk",
+            "#fb8c00",
+            "⚠️ ADVISORY FOR SENIORS: Limit all exertion; maintain room airflow with fans/desert coolers. Wear loose light cotton. Avoid caffeinated teas and high-sugar drinks."
+        )
+    else:
+        return (
+            "Normal Monitoring",
+            "#2e7d32",
+            "✅ SAFE FOR SENIORS: Routine summer precautions, regular water intake, standard surveillance."
+        )
+
+def calculate_wet_bulb_stull(temp_c, rh):
+    t = float(temp_c)
+    r = max(1.0, min(100.0, float(rh)))
+    tw = (
+        t * np.arctan(0.151977 * np.sqrt(r + 8.313659))
+        + np.arctan(t + r)
+        - np.arctan(r - 1.676331)
+        + 0.00391838 * (r**1.5) * np.arctan(0.023101 * r)
+        - 4.686035
+    )
+    return round(float(tw), 1)
+
+def calculate_wbgt_sun(temp_c, rh, wind_mps, solar_wm2):
+    tw = calculate_wet_bulb_stull(temp_c, rh)
+    v = max(0.3, float(wind_mps))
+    s = max(0.0, float(solar_wm2))
+    delta_tg = (s * 0.0165) / np.sqrt(v)
+    tg = round(float(temp_c + delta_tg), 1)
+    wbgt_sun = round(float(0.7 * tw + 0.2 * tg + 0.1 * temp_c), 1)
+    
+    if wbgt_sun < 26.0:
+        work_rest = "100% Work / Normal Activity"
+    elif wbgt_sun < 29.0:
+        work_rest = "75% Work / 25% Rest hourly"
+    elif wbgt_sun < 31.0:
+        work_rest = "50% Work / 50% Rest hourly"
+    elif wbgt_sun < 32.2:
+        work_rest = "25% Work / 75% Rest hourly"
+    else:
+        work_rest = "Mandatory Labor Moratorium"
+        
+    return wbgt_sun, work_rest
+
+def calculate_noaa_heat_index(temp_c, rh):
+    r = max(0.0, min(100.0, float(rh)))
+    t_f = temp_c * 9.0 / 5.0 + 32.0
+    if t_f < 80.0:
+        hi_f = 0.5 * (t_f + 61.0 + ((t_f - 68.0) * 1.2) + (r * 0.094))
+    else:
+        hi_f = (
+            -42.379 + 2.04901523 * t_f + 10.14333127 * r
+            - 0.22475541 * t_f * r - 0.00683783 * (t_f**2)
+            - 0.05481717 * (r**2) + 0.00122874 * (t_f**2) * r
+            + 0.00085282 * t_f * (r**2) - 0.00000199 * (t_f**2) * (r**2)
+        )
+    return round(float((hi_f - 32.0) * 5.0 / 9.0), 1)
+
+def calculate_relative_risk(temp_c, threshold=36.0):
+    excess = max(0.0, float(temp_c) - threshold)
+    rr = np.exp(0.045 * excess)
+    return round(float(rr), 2)
+
 def generate_enriched_wards():
     print("Generating Enriched 5-Day Ward-Level Dataset...")
     
@@ -146,6 +224,15 @@ def generate_enriched_wards():
         delta_T = round((2.6 * (ward_built - 0.5)) - (3.8 * (ward_ndvi - 0.2)) + (0.05 * (ward_slum - 10.0)), 2)
         ward_display_name = f"Ward {unique_id} ({matched_zone})"
         
+        # Demographic & Elderly Population Estimation
+        total_pop = int(ward_pop_density * area_sqkm)
+        elderly_pct = round(float(np.clip(9.4 + (ward_built - 0.5) * 4.0 - (ward_slum - 10) * 0.08 + np.random.uniform(-0.6, 0.6), 7.5, 14.5)), 1)
+        elderly_pop = int(total_pop * (elderly_pct / 100.0))
+        # High-risk elderly: residing in tin-sheet / dense slum housing without active cooling
+        elderly_high_risk = int(elderly_pop * np.clip((ward_slum / 100.0 * 1.5 + (1.0 - ward_ndvi) * 0.22), 0.15, 0.85))
+        cooling_shelter = f"MCD Primary Health Center & AC Shelter, Sector {(int(ward_num) % 14) + 1}, {matched_zone}"
+        shelter_capacity = int(90 + (int(ward_num) * 17) % 210)
+        
         ward_dict = {
             "ward_id": unique_id,
             "ward_name": ward_display_name,
@@ -158,7 +245,13 @@ def generate_enriched_wards():
             "ndvi_vegetation": ward_ndvi,
             "built_up_ratio": ward_built,
             "slum_density_pct": ward_slum,
-            "pop_density_per_km2": ward_pop_density
+            "pop_density_per_km2": ward_pop_density,
+            "total_population": total_pop,
+            "elderly_pct": elderly_pct,
+            "elderly_population": elderly_pop,
+            "elderly_high_risk": elderly_high_risk,
+            "cooling_shelter": cooling_shelter,
+            "shelter_capacity": shelter_capacity
         }
         
         # Calculate Day 1 through Day 5 values
@@ -170,7 +263,12 @@ def generate_enriched_wards():
             d_pred_temp = round(d_base_temp + delta_T, 1)
             d_utci = calculate_utci_approx(d_pred_temp, d_weather["forecast_rh"], d_weather["forecast_wind"], d_weather["forecast_solar"])
             d_risk, d_color, d_measures = get_risk_tier(d_utci)
+            d_e_risk, d_e_color, d_e_measures = get_elderly_risk_tier(d_utci)
             d_action = d_measures.split(":")[1].split(",")[0].strip() if ":" in d_measures else d_measures
+            d_wbgt, d_wbgt_workrest = calculate_wbgt_sun(d_pred_temp, d_weather["forecast_rh"], d_weather["forecast_wind"], d_weather["forecast_solar"])
+            d_hi = calculate_noaa_heat_index(d_pred_temp, d_weather["forecast_rh"])
+            d_tw = calculate_wet_bulb_stull(d_pred_temp, d_weather["forecast_rh"])
+            d_rr = calculate_relative_risk(d_pred_temp)
             
             ward_dict[f"d{d_idx}_base_temp"] = d_base_temp
             ward_dict[f"d{d_idx}_temp"] = d_pred_temp
@@ -184,6 +282,14 @@ def generate_enriched_wards():
             ward_dict[f"d{d_idx}_utci_display"] = f"{d_utci} °C ({d_risk})"
             ward_dict[f"d{d_idx}_action"] = d_action
             ward_dict[f"d{d_idx}_measures"] = d_measures
+            ward_dict[f"d{d_idx}_elderly_risk"] = d_e_risk
+            ward_dict[f"d{d_idx}_elderly_color"] = d_e_color
+            ward_dict[f"d{d_idx}_elderly_measures"] = d_e_measures
+            ward_dict[f"d{d_idx}_wbgt"] = d_wbgt
+            ward_dict[f"d{d_idx}_wbgt_workrest"] = d_wbgt_workrest
+            ward_dict[f"d{d_idx}_heat_index"] = d_hi
+            ward_dict[f"d{d_idx}_wet_bulb"] = d_tw
+            ward_dict[f"d{d_idx}_relative_risk"] = d_rr
             
         # Overall 5-Day Worst Case
         w_weather = zone_worst_peaks.get(matched_zone, {
@@ -193,7 +299,12 @@ def generate_enriched_wards():
         w_pred_temp = round(w_base_temp + delta_T, 1)
         w_utci = calculate_utci_approx(w_pred_temp, w_weather["forecast_rh"], w_weather["forecast_wind"], w_weather["forecast_solar"])
         w_risk, w_color, w_measures = get_risk_tier(w_utci)
+        w_e_risk, w_e_color, w_e_measures = get_elderly_risk_tier(w_utci)
         w_action = w_measures.split(":")[1].split(",")[0].strip() if ":" in w_measures else w_measures
+        w_wbgt, w_wbgt_workrest = calculate_wbgt_sun(w_pred_temp, w_weather["forecast_rh"], w_weather["forecast_wind"], w_weather["forecast_solar"])
+        w_hi = calculate_noaa_heat_index(w_pred_temp, w_weather["forecast_rh"])
+        w_tw = calculate_wet_bulb_stull(w_pred_temp, w_weather["forecast_rh"])
+        w_rr = calculate_relative_risk(w_pred_temp)
         
         ward_dict["worst_base_temp"] = w_base_temp
         ward_dict["worst_temp"] = w_pred_temp
@@ -207,6 +318,14 @@ def generate_enriched_wards():
         ward_dict["worst_utci_display"] = f"{w_utci} °C ({w_risk})"
         ward_dict["worst_action"] = w_action
         ward_dict["worst_measures"] = w_measures
+        ward_dict["worst_elderly_risk"] = w_e_risk
+        ward_dict["worst_elderly_color"] = w_e_color
+        ward_dict["worst_elderly_measures"] = w_e_measures
+        ward_dict["worst_wbgt"] = w_wbgt
+        ward_dict["worst_wbgt_workrest"] = w_wbgt_workrest
+        ward_dict["worst_heat_index"] = w_hi
+        ward_dict["worst_wet_bulb"] = w_tw
+        ward_dict["worst_relative_risk"] = w_rr
         
         # Default active values (starts as worst-case peak)
         ward_dict["forecast_temp"] = w_base_temp
@@ -221,6 +340,14 @@ def generate_enriched_wards():
         ward_dict["utci_display"] = ward_dict["worst_utci_display"]
         ward_dict["action_summary"] = w_action
         ward_dict["measures"] = w_measures
+        ward_dict["elderly_risk"] = w_e_risk
+        ward_dict["elderly_color"] = w_e_color
+        ward_dict["elderly_measures"] = w_e_measures
+        ward_dict["wbgt_sun"] = w_wbgt
+        ward_dict["wbgt_workrest"] = w_wbgt_workrest
+        ward_dict["heat_index"] = w_hi
+        ward_dict["wet_bulb"] = w_tw
+        ward_dict["relative_risk"] = w_rr
         
         enriched_features.append({
             "type": "Feature",
