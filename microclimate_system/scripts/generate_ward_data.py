@@ -34,38 +34,38 @@ def calculate_utci_approx(temp_c, rh_pct, wind_mps, solar_wm2):
 
 def get_risk_tier(utci):
     if utci >= 43.0:
-        return "Extreme Danger", "#8b0000", "🚨 EMERGENCY: Open 24/7 cooling centers, halt outdoor labor (11am-4pm), dispatch emergency water tankers to slum clusters, activate hospital heat-stroke protocols."
+        return "Extreme Danger", "#8b0000", "[EMERGENCY DIRECTIVE] Open 24/7 cooling centers, halt outdoor labor (11am-4pm), dispatch emergency water tankers to slum clusters, activate hospital heat-stroke protocols."
     elif utci >= 38.0:
-        return "Critical Heat", "#e53935", "🔥 CRITICAL: Activate municipal misting fans, set up ORS hydration booths, advise elderly/children to remain indoors, halt non-essential outdoor work."
+        return "Critical Heat", "#e53935", "[CRITICAL ADVISORY] Activate municipal misting fans, set up ORS hydration booths, advise elderly/children to remain indoors, halt non-essential outdoor work."
     elif utci >= 32.0:
-        return "Moderate Risk", "#fb8c00", "⚠️ ADVISORY: Enforce hydration breaks for outdoor workers, distribute ORS at transit hubs, maintain continuous water supplies in high-density settlements."
+        return "Moderate Risk", "#fb8c00", "[STANDARD ADVISORY] Enforce hydration breaks for outdoor workers, distribute ORS at transit hubs, maintain continuous water supplies in high-density settlements."
     else:
-        return "Safe", "#2e7d32", "✅ NORMAL: Routine conditions, maintain standard municipal water surveillance, no emergency restrictions."
+        return "Safe", "#2e7d32", "[NORMAL CONDITIONS] Routine conditions, maintain standard municipal water surveillance, no emergency restrictions."
 
 def get_elderly_risk_tier(utci):
     if utci >= 42.0:
         return (
             "Severe Geriatric Danger",
             "#8b0000",
-            "🚨 CRITICAL FOR SENIORS (60+): Extreme risk of heat-stroke, acute renal strain & cardiovascular collapse. Evacuate to air-conditioned shelter if room exceeds 32°C. Caregivers conduct hourly checks. Sip 200ml ORS every 45 mins. Call 108 immediately for dizziness/confusion."
+            "[CRITICAL FOR SENIORS 60+] Extreme risk of heat-stroke, acute renal strain & cardiovascular collapse. Evacuate to air-conditioned shelter if room exceeds 32°C. Caregivers conduct hourly checks. Sip 200ml ORS every 45 mins. Call 108 immediately for dizziness/confusion."
         )
     elif utci >= 37.0:
         return (
             "Critical Geriatric Strain",
             "#e53935",
-            "🔥 HIGH RISK FOR SENIORS: Strict indoor shelter (10am-5pm). Keep windows curtained; apply cool damp towels to neck/wrists. Ensure continuous caregiver hydration prompts (1.5-2L daily). Check blood pressure & review diuretics."
+            "[HIGH RISK FOR SENIORS] Strict indoor shelter (10am-5pm). Keep windows curtained; apply cool damp towels to neck/wrists. Ensure continuous caregiver hydration prompts (1.5-2L daily). Check blood pressure & review diuretics."
         )
     elif utci >= 32.0:
         return (
             "Moderate Geriatric Risk",
             "#fb8c00",
-            "⚠️ ADVISORY FOR SENIORS: Limit all exertion; maintain room airflow with fans/desert coolers. Wear loose light cotton. Avoid caffeinated teas and high-sugar drinks."
+            "[ADVISORY FOR SENIORS] Limit all exertion; maintain room airflow with fans/desert coolers. Wear loose light cotton. Avoid caffeinated teas and high-sugar drinks."
         )
     else:
         return (
             "Normal Monitoring",
             "#2e7d32",
-            "✅ SAFE FOR SENIORS: Routine summer precautions, regular water intake, standard surveillance."
+            "[SAFE FOR SENIORS] Routine summer precautions, regular water intake, standard surveillance."
         )
 
 def calculate_wet_bulb_stull(temp_c, rh):

@@ -13,7 +13,7 @@ import pandas as pd
 from scripts.generate_ward_data import calculate_utci_approx, get_risk_tier, get_elderly_risk_tier
 
 PRESET_SCENARIOS = {
-    "⚡ El Niño Super Heatwave (+4.0°C Regional Anomaly)": {
+    "Scenario A: Macro Heatwave (+4.0°C Regional Anomaly)": {
         "description": "Simulates severe macro-synoptic heat dome with stagnant winds and moderate humidity.",
         "ambient_delta_c": 4.0,
         "rh_delta_pct": 5.0,
@@ -24,7 +24,7 @@ PRESET_SCENARIOS = {
         "misting_units": 0.0,
         "slum_insulation_pct": 0.0
     },
-    "🌳 NDMA 'Cool Delhi 2030' Mission (Greenery & Cool Roofs)": {
+    "Policy Intervention 1: Municipal Urban Greening & Cool Roofs": {
         "description": "Massive civic intervention: 35% cool roofs on tin/concrete, 25% tree canopy afforestation.",
         "ambient_delta_c": 0.0,
         "rh_delta_pct": 0.0,
@@ -35,7 +35,7 @@ PRESET_SCENARIOS = {
         "misting_units": 1.5,
         "slum_insulation_pct": 20.0
     },
-    "💧 Wet-Bulb Humidity Crisis (+2.5°C & +25% Humidity)": {
+    "Scenario B: High Humidity Compound Heat Crisis (+2.5°C & +25% Humidity)": {
         "description": "Simulates monsoon-break pre-rain sultry conditions where humidity severely impairs sweat evaporation.",
         "ambient_delta_c": 2.5,
         "rh_delta_pct": 25.0,
@@ -46,7 +46,7 @@ PRESET_SCENARIOS = {
         "misting_units": 0.0,
         "slum_insulation_pct": 0.0
     },
-    "🏠 Targeted Informal Settlement Slum Retrofit": {
+    "Policy Intervention 2: Targeted Informal Settlement Thermal Retrofit": {
         "description": "Targeted deployment of white reflective coatings, insulation nets, and misting in dense slum clusters.",
         "ambient_delta_c": 0.0,
         "rh_delta_pct": 0.0,

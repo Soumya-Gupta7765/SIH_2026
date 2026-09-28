@@ -69,7 +69,7 @@ def run_benchmark():
             'R² Score': round(r2, 4),
             'Inference (ms/sample)': round(latency_ms, 4)
         })
-        print(f"✓ {name}: RMSE={rmse:.4f}°C | MAE={mae:.4f}°C | R²={r2:.4f}")
+        print(f"[OK] {name}: RMSE={rmse:.4f}°C | MAE={mae:.4f}°C | R²={r2:.4f}")
         
     # Weighted Ensemble
     p_xgb = models['XGBoost (Chosen Production Model)'].predict(X_test)

@@ -1,4 +1,4 @@
-# 🌡️ Sirens of Summer: Hyper-Local Microclimate Heat Alert System (Delhi-NCR)
+# Sirens of Summer: Hyper-Local Microclimate Heat Alert System (Delhi-NCR)
 
 > **Smart India Hackathon (SIH 2026)** | **Problem Statement**: Extreme Heat Early Warning & Microclimate Downscaling Engine
 
@@ -6,15 +6,15 @@ An AI-powered, hyper-local heat early warning system that predicts human thermal
 
 ---
 
-## 🌟 Key Highlights & Capabilities
+## Key Highlights and Capabilities
 
 * **272 MCD Ward Granularity**: Downscales regional synoptic forecasts down to individual municipal wards across East, North, and South Delhi Municipal Corporations.
 * **120-Hour Diurnal Evolution Timeline**: Interactive hour-by-hour time-series showing how heat builds up each afternoon and whether wards experience nocturnal cooling or dangerous heat trapping.
 * **5-Day Horizon Navigation**: Interactive day-by-day navigation (`Day 1 (+24h)` through `Day 5 (+120h)`) plus a **Worst-Case 5-Day Peak** selector for disaster management planning.
 * **Universal Thermal Climate Index (UTCI)**: Biomechanical heat stress calculation integrating dry-bulb temperature, mean radiant temperature ($T_r$), relative humidity, and wind speed via `pythermalcomfort` (ISO 7243 compliant).
-* **🧪 AI Simulation Lab (What-If Policy Sandbox)**: Real-time interactive sandbox allowing urban planners to simulate climate shifts (ambient heat rise, wet-bulb humidity, wind stagnation) and civic interventions (cool roofs coating %, Miyawaki urban afforestation, atomized misting canons, and slum thermal insulation) with instant before-vs-after delta metrics and power grid relief estimates.
-* **👵 Geriatric (Elderly 60+) Protection System**: Quantifies ward-level senior citizen demographics (~1.9M seniors across Delhi), flags high-risk uncooled tin-roof households, maps 272 designated 24/7 air-conditioned public cooling shelters, and provides clinical directives (hydration rules, cardiovascular/diuretic medication watch, bilingual English/Hindi pamphlets).
-* **🚨 100% Free Multi-Channel Emergency Dispatch**: Zero-cost replacement for commercial SMS gateways like Twilio. Integrates Telegram Bot API (unlimited free push alerts), CallMeBot WhatsApp Gateway, Free SMTP Email for ward nodal officers, and NDMA-compliant Cell Broadcast Service (CBS) with Web Audio siren tones and audit logging.
+* **AI Simulation Lab (What-If Policy Sandbox)**: Real-time interactive sandbox allowing urban planners to simulate climate shifts (ambient heat rise, wet-bulb humidity, wind stagnation) and civic interventions (cool roofs coating %, Miyawaki urban afforestation, atomized misting canons, and slum thermal insulation) with instant before-vs-after delta metrics and power grid relief estimates.
+* **Geriatric (Elderly 60+) Protection System**: Quantifies ward-level senior citizen demographics (~1.9M seniors across Delhi), flags high-risk uncooled tin-roof households, maps 272 designated 24/7 air-conditioned public cooling shelters, and provides clinical directives (hydration rules, cardiovascular/diuretic medication watch, bilingual English/Hindi pamphlets).
+* **Free Multi-Channel Emergency Dispatch**: Zero-cost replacement for commercial SMS gateways. Integrates Telegram Bot API (unlimited free push alerts), CallMeBot WhatsApp Gateway, Free SMTP Email for ward nodal officers, and NDMA-compliant Cell Broadcast Service (CBS) with Web Audio siren tones and audit logging.
 * **Tri-Factor Vulnerability Framework (NDMA Compliant)**:
   * **Hazard (50%)**: Physiological UTCI heat stress score.
   * **Vulnerability (30%)**: Physical proxies including DUSIB slum cluster density, tin-sheet roofing prevalence, and vegetation deficits (NDVI).
@@ -23,7 +23,7 @@ An AI-powered, hyper-local heat early warning system that predicts human thermal
 
 ---
 
-## 🏗️ System Architecture & Pipeline
+## System Architecture and Pipeline
 
 ```
  ┌──────────────────────┐      ┌─────────────────────────┐
@@ -60,7 +60,7 @@ An AI-powered, hyper-local heat early warning system that predicts human thermal
 
 ---
 
-## 📊 Data Sources & Provenance
+## Data Sources and Provenance
 
 | Dataset | Source | Purpose |
 | :--- | :--- | :--- |
@@ -73,7 +73,7 @@ An AI-powered, hyper-local heat early warning system that predicts human thermal
 
 ---
 
-## 🧠 Model Selection, EDA & Benchmarking Ablation Study
+## Model Selection, EDA and Benchmarking Ablation Study
 
 To mathematically validate our downscaling architecture and avoid arbitrary algorithm selection, we conducted a rigorous **Exploratory Data Analysis (EDA)** and a **Multi-Model Benchmark Matrix** comparing 5 machine learning algorithms on the 8,640 paired hourly observations of Delhi-NCR microclimates.
 
@@ -88,12 +88,12 @@ All models were evaluated on the same 20% holdout test set using identical featu
 
 | Model Architecture | RMSE ($^\circ\text{C}$) | MAE ($^\circ\text{C}$) | $R^2$ Score | Inference Latency | Selection Verdict |
 | :--- | :---: | :---: | :---: | :---: | :--- |
-| **Ridge Regression (Linear Baseline)** | $1.4087^\circ\text{C}$ | $1.0340^\circ\text{C}$ | $0.3620$ | $0.0003\text{ ms}$ | ❌ **Rejected**: Underfits; unable to model non-linear boundary layer thermodynamics. |
-| **Random Forest Regressor** | $1.1541^\circ\text{C}$ | $0.8620^\circ\text{C}$ | $0.5718$ | $0.0130\text{ ms}$ | ⚠️ **Baseline Bagging**: High variance; slower inference on embedded servers. |
-| **CatBoost Regressor** | $1.1708^\circ\text{C}$ | $0.8829^\circ\text{C}$ | $0.5593$ | $0.0007\text{ ms}$ | ⚠️ **Viable**: Good handling of categorical features, but slightly higher error. |
-| **LightGBM Regressor** | $1.0904^\circ\text{C}$ | $0.8238^\circ\text{C}$ | $0.6177$ | $0.0019\text{ ms}$ | 🥈 **Runner-Up**: Highly competitive accuracy and fast leaf-wise convergence. |
-| **XGBoost (Chosen Production Model)** | **$1.0852^\circ\text{C}$** | **$0.8211^\circ\text{C}$** | **$0.6214$** | **$0.0011\text{ ms}$** | 🏆 **Production Champion**: Lowest error, highest $R^2$, and optimal regularization ($L_1/L_2$) against overfitting. |
-| **Weighted Ensemble (XGB 45% + Cat 35% + LGB 20%)** | $1.1067^\circ\text{C}$ | $0.8367^\circ\text{C}$ | $0.6062$ | $0.0420\text{ ms}$ | ℹ️ **Ensemble Test**: Solid stability, but single XGBoost provides superior sub-millisecond edge latency with slightly better empirical error. |
+| **Ridge Regression (Linear Baseline)** | $1.4087^\circ\text{C}$ | $1.0340^\circ\text{C}$ | $0.3620$ | $0.0003\text{ ms}$ | **[Rejected]**: Underfits; unable to model non-linear boundary layer thermodynamics. |
+| **Random Forest Regressor** | $1.1541^\circ\text{C}$ | $0.8620^\circ\text{C}$ | $0.5718$ | $0.0130\text{ ms}$ | **[Baseline]**: High variance; slower inference on embedded servers. |
+| **CatBoost Regressor** | $1.1708^\circ\text{C}$ | $0.8829^\circ\text{C}$ | $0.5593$ | $0.0007\text{ ms}$ | **[Viable]**: Good handling of categorical features, but slightly higher error. |
+| **LightGBM Regressor** | $1.0904^\circ\text{C}$ | $0.8238^\circ\text{C}$ | $0.6177$ | $0.0019\text{ ms}$ | **[Runner-Up]**: Highly competitive accuracy and fast leaf-wise convergence. |
+| **XGBoost (Chosen Production Model)** | **$1.0852^\circ\text{C}$** | **$0.8211^\circ\text{C}$** | **$0.6214$** | **$0.0011\text{ ms}$** | **[Selected]**: Lowest error, highest $R^2$, and optimal regularization ($L_1/L_2$) against overfitting. |
+| **Weighted Ensemble (XGB 45% + Cat 35% + LGB 20%)** | $1.1067^\circ\text{C}$ | $0.8367^\circ\text{C}$ | $0.6062$ | $0.0420\text{ ms}$ | **[Ensemble Baseline]**: Solid stability, but single XGBoost provides superior sub-millisecond edge latency with slightly better empirical error. |
 
 > **Reproducibility**: Run `python scripts/benchmark_models.py` to re-execute the automated ablation benchmark.
 
@@ -122,14 +122,14 @@ To ensure full transparency for municipal disaster response teams, we integrated
 | Architectural Dimension | Global AI Engines (e.g. Google GraphCast / Earth Engine) | Sirens of Summer (Our Architecture) |
 | :--- | :--- | :--- |
 | **Spatial Granularity** | **$0.25^\circ \times 0.25^\circ$ ($\approx 28 \text{ km} \times 28 \text{ km}$)**<br>Entire Delhi-NCR fits into just 2–3 coarse grid cells. | **Hyper-Local Sub-Kilometer (<1 km)**<br>Mapped directly to all **272 individual MCD Municipal Administrative Wards**. |
-| **Urban Morphology Awareness** | ❌ **Blind to Civic Infrastructure**<br>Cannot distinguish between a shaded Lutyens' forest and a tin-roof slum in Seelampur. | ✅ **Socio-Physical Hybrid Features**<br>Directly ingests Sentinel-2 NDVI canopy deficit, DUSIB slum densities, and built-up concrete ratios. |
-| **Physiological Stress Metrics** | ⚠️ Raw air temperature ($T_{\text{air}}$) only. | ✅ **ISO 7243 Compliant UTCI & WBGT**<br>Biomechanical human strain modeling for labor safety and geriatric protection. |
-| **Cost & Civic Sovereignty** | ❌ **High Recurring Dollar Subscriptions**<br>Requires enterprise cloud billing, credit cards, and proprietary API lock-in. | ✅ **100% Free & Self-Hosted**<br>Runs on standard municipal edge servers with zero ongoing vendor costs. |
-| **Actionable Municipal Directives** | ❌ Passive numerical predictions with no municipal protocol integration. | ✅ **Automated Civic Triggers**<br>Water tanker dispatch, 24/7 cooling shelter activation, labor work bans, and free Telegram/CBS alerts. |
+| **Urban Morphology Awareness** | **Blind to Civic Infrastructure**<br>Cannot distinguish between a shaded Lutyens' forest and a tin-roof slum in Seelampur. | **Socio-Physical Hybrid Features**<br>Directly ingests Sentinel-2 NDVI canopy deficit, DUSIB slum densities, and built-up concrete ratios. |
+| **Physiological Stress Metrics** | Raw air temperature ($T_{\text{air}}$) only. | **ISO 7243 Compliant UTCI and WBGT**<br>Biomechanical human strain modeling for labor safety and geriatric protection. |
+| **Cost and Civic Sovereignty** | **High Recurring Subscriptions**<br>Requires enterprise cloud billing, credit cards, and proprietary API lock-in. | **Free and Self-Hosted**<br>Runs on standard municipal edge servers with zero ongoing vendor costs. |
+| **Actionable Municipal Directives** | Passive numerical predictions with no municipal protocol integration. | **Automated Civic Triggers**<br>Water tanker dispatch, 24/7 cooling shelter activation, labor work bans, and free Telegram/CBS alerts. |
 
 ---
 
-## 📁 Repository Structure
+## Repository Structure
 
 ```
 SIH-26/
@@ -167,7 +167,7 @@ SIH-26/
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 * **Python 3.10+** (Tested on Python 3.11)
@@ -200,7 +200,7 @@ SIH-26/
 
 ---
 
-## 🏃 Running the System
+## Running the System
 
 ### 1. Run the Complete Data & Model Pipeline
 Fetches fresh historical data, retrains XGBoost, pulls live 5-day weather, and synthesizes 272 ward layers:
@@ -216,7 +216,7 @@ Open **`http://localhost:8501`** in your browser.
 
 ---
 
-## 🌡️ Heat Stress & Alert Tiers (UTCI Standards)
+## Heat Stress and Alert Tiers (UTCI Standards)
 
 | Alert Level | UTCI Range | Primary Municipal Action Directive |
 | :--- | :---: | :--- |
@@ -227,6 +227,6 @@ Open **`http://localhost:8501`** in your browser.
 
 ---
 
-## 👥 Team: Sirens of Summer
+## Team: Sirens of Summer
 * **Hackathon**: Smart India Hackathon (SIH 2026)
 * **Domain**: Disaster Management / AI & Climate Resilience

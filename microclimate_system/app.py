@@ -20,7 +20,7 @@ from ai_simulation_lab import PRESET_SCENARIOS, run_climate_simulation
 # ------------------------------------------------------------------------------
 st.set_page_config(
     page_title="MoES • NCMRWF | Sirens of Summer Heat Early Warning Engine",
-    page_icon="🌡️",
+    page_icon=None,
     layout="wide",
     initial_sidebar_state="collapsed"
 )
@@ -535,7 +535,7 @@ div[role="radiogroup"] {
 st.markdown("""
 <header class="app-header">
   <div class="header-left">
-    <div class="brand-emblem">🔥</div>
+    <div class="brand-emblem"><span style="font-weight:800; font-size:1.05rem; letter-spacing:0.04em; color:#FFFFFF;">MCD</span></div>
     <div class="brand-info">
       <div class="brand-title">
         MoES • NCMRWF
@@ -546,11 +546,11 @@ st.markdown("""
   </div>
   <div class="header-center">
     <div class="city-select-pill">
-      <span>📍 Pilot Region: <strong>Delhi-NCR</strong> [272 MCD Wards]</span>
+      <span>Pilot Region: <strong>Delhi-NCR</strong> [272 MCD Wards]</span>
     </div>
     <div class="live-indicator">
       <span class="live-dot"></span>
-      <span>XGBOOST MICROCLIMATE LIVE FEED</span>
+      <span>Live — XGBoost Microclimate Feed</span>
     </div>
   </div>
 </header>
@@ -598,14 +598,14 @@ if os.path.exists(spatial_features_path):
 # ------------------------------------------------------------------------------
 # 5. 5-DAY HORIZON NAVIGATION BAR
 # ------------------------------------------------------------------------------
-st.markdown("##### 📅 Operational Forecast Horizon:")
+st.markdown("##### Operational Forecast Horizon:")
 horizon_cols = [
-    "🔥 Worst-Case 5-Day Peak",
-    "📅 Day 1 (+24h)",
-    "📅 Day 2 (+48h)",
-    "📅 Day 3 (+72h)",
-    "📅 Day 4 (+96h)",
-    "📅 Day 5 (+120h)"
+    "Worst-Case 5-Day Peak",
+    "Day 1 (+24h Outlook)",
+    "Day 2 (+48h Outlook)",
+    "Day 3 (+72h Outlook)",
+    "Day 4 (+96h Outlook)",
+    "Day 5 (+120h Outlook)"
 ]
 selected_horizon = st.radio(
     "Select Horizon View:",
@@ -616,12 +616,12 @@ selected_horizon = st.radio(
 )
 
 horizon_prefix_map = {
-    "🔥 Worst-Case 5-Day Peak": "worst_",
-    "📅 Day 1 (+24h)": "d1_",
-    "📅 Day 2 (+48h)": "d2_",
-    "📅 Day 3 (+72h)": "d3_",
-    "📅 Day 4 (+96h)": "d4_",
-    "📅 Day 5 (+120h)": "d5_"
+    "Worst-Case 5-Day Peak": "worst_",
+    "Day 1 (+24h Outlook)": "d1_",
+    "Day 2 (+48h Outlook)": "d2_",
+    "Day 3 (+72h Outlook)": "d3_",
+    "Day 4 (+96h Outlook)": "d4_",
+    "Day 5 (+120h Outlook)": "d5_"
 }
 prefix = horizon_prefix_map.get(selected_horizon, "worst_")
 
@@ -729,10 +729,10 @@ with map_col:
     st.markdown("""
     <div class="legend-box">
       <span style="color: #94A3B8; font-weight:700;">IMD / NDMA ALERT SCALE:</span>
-      <span style="color: #EF4444;">● Extreme Danger (&gt;43°C UTCI)</span>
-      <span style="color: #F97316;">● Critical Heat (38-43°C UTCI)</span>
-      <span style="color: #F59E0B;">● Moderate Risk (32-38°C UTCI)</span>
-      <span style="color: #10B981;">● Normal / Safe (&lt;32°C UTCI)</span>
+      <span style="display:inline-flex;align-items:center;gap:6px;"><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#EF4444;"></span> Extreme Danger (&gt;43°C UTCI)</span>
+      <span style="display:inline-flex;align-items:center;gap:6px;"><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#F97316;"></span> Critical Heat (38–43°C UTCI)</span>
+      <span style="display:inline-flex;align-items:center;gap:6px;"><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#F59E0B;"></span> Moderate Risk (32–38°C UTCI)</span>
+      <span style="display:inline-flex;align-items:center;gap:6px;"><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#10B981;"></span> Normal / Safe (&lt;32°C UTCI)</span>
     </div>
     """, unsafe_allow_html=True)
     
@@ -747,7 +747,7 @@ with map_col:
     folium.TileLayer(
         tiles="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
         attr="Esri World Imagery",
-        name="🛰️ Satellite Imagery",
+        name="Satellite Imagery (Esri)",
         overlay=False,
         control=True
     ).add_to(m)
@@ -756,7 +756,7 @@ with map_col:
     folium.TileLayer(
         tiles="https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}",
         attr="Esri World Topo",
-        name="🗺️ Topo / Landmarks",
+        name="Topographic Base (Esri)",
         overlay=False,
         control=True
     ).add_to(m)
@@ -807,13 +807,13 @@ with map_col:
                 "elderly_risk_str"
             ],
             aliases=[
-                "🏛️ Ward:",
-                "🏢 Corporation:",
-                "🌡️ Microclimate Temp:",
-                "🔥 Thermal Stress (UTCI):",
-                "⚠️ Adult Risk Status:",
-                "👵 Senior Citizens (60+):",
-                "🚨 Geriatric Status:"
+                "Ward:",
+                "Corporation:",
+                "Downscaled Temp:",
+                "Thermal Stress (UTCI):",
+                "Alert Status:",
+                "Senior Population (60+):",
+                "Geriatric Risk Status:"
             ],
             localize=True,
             sticky=False,
@@ -857,7 +857,7 @@ with inspector_col:
                 selected_ward_name = clicked_name
                 
         chosen_ward = st.selectbox(
-            "🔍 Inspect Target Municipal Ward:",
+            "Select Target Municipal Ward:",
             ward_names_list,
             index=ward_names_list.index(selected_ward_name) if selected_ward_name in ward_names_list else 0
         )
@@ -877,12 +877,12 @@ with inspector_col:
 </div>
 </div>
 <div class="risk-badge {badge_cls}">
-<span>● {w['risk_level']}</span>
+<span>{w['risk_level']}</span>
 </div>
 </div>
 <div class="microclimate-box">
 <div class="microclimate-title">
-<span>✨ XGBoost Microclimate Adjustment</span>
+<span>Statistical Downscaling Adjustment (XGBoost MOS)</span>
 <span style="color:#94A3B8;">{selected_horizon.split(' ')[0]}</span>
 </div>
 <div class="microclimate-grid">
@@ -962,20 +962,20 @@ Ward Vulnerability & Exposure Multipliers
 </div>
 <div style="background: rgba(239, 68, 68, 0.09); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 12px; padding: 12px; margin-bottom: 12px;">
 <div style="font-size: 0.78rem; font-weight: 700; color: #FCA5A5; text-transform: uppercase; margin-bottom: 4px;">
-🚨 Active Municipal Directive:
+MANDATORY MUNICIPAL DIRECTIVE:
 </div>
 <div style="font-size: 0.78rem; color: #F8FAFC; line-height: 1.4;">
 {w['measures']}
 </div>
 <div style="margin-top: 8px; font-size: 0.76rem; color: #94A3B8;">
-🏥 Nearest AC Shelter: <strong style="color: #60A5FA;">{w.get('cooling_shelter', 'MCD Community Shelter')}</strong> (Capacity: {w.get('shelter_capacity', 150)} beds)
+Designated Emergency Cooling Facility: <strong style="color: #60A5FA;">{w.get('cooling_shelter', 'MCD Community Shelter')}</strong> (Capacity: {w.get('shelter_capacity', 150)} beds)
 </div>
 </div>
 </div>"""
         st.markdown(inspector_html, unsafe_allow_html=True)
         
         # Emergency Action Dispatcher inside Dossier
-        if st.button(f"🚨 Broadcast Emergency Dispatch to {w['ward_name']}", key="btn_dossier_alert"):
+        if st.button(f"Initiate Emergency Dispatch — {w['ward_name']}", key="btn_dossier_alert"):
             trigger_audio_siren()
             alert_dispatcher.log_broadcast_event(
                 channel="Municipal Cell Broadcast (CBS)",
@@ -988,7 +988,7 @@ Ward Vulnerability & Exposure Multipliers
                 status="Dispatched (200 OK)",
                 message_snippet=w['action_summary']
             )
-            st.success(f"🚨 Immediate emergency broadcast transmitted to {int(w.get('total_population', 50000)):,} mobile phones in {w['ward_name']}!")
+            st.success(f"Emergency broadcast transmitted to {int(w.get('total_population', 50000)):,} mobile devices in {w['ward_name']}.")
 
 st.markdown("<div style='height: 20px;'></div>", unsafe_allow_html=True)
 
@@ -1004,20 +1004,20 @@ st.markdown("<div style='height: 20px;'></div>", unsafe_allow_html=True)
     tab_diagnostics,
     tab_framework
 ) = st.tabs([
-    "📈 120-Hour Timeline & Diurnal Curves",
-    "📊 Ward Heat Stress Leaderboard",
-    "🧪 Thermal Stress & AI Simulation Lab",
-    "👵 Geriatric (Elderly 60+) Protection Plan",
-    "🚨 Free Emergency Messaging & Public Broadcast",
-    "🧠 XGBoost Model Diagnostics & Physics",
-    "🏛️ Municipal Action Protocols (NDMA / HAP)"
+    "120-Hour Forecast Timeline",
+    "Ward Risk Classification",
+    "Climate Scenario Simulation",
+    "Geriatric Heat Mitigation Framework",
+    "Emergency Alert Transmission System",
+    "Model Diagnostics and Verification",
+    "Administrative Action Protocols (NDMA / HAP)"
 ])
 
 # ==============================================================================
 # TAB 1: 120-HOUR TIMELINE
 # ==============================================================================
 with tab_timeline:
-    st.subheader("Hourly Microclimate & Thermal Stress Evolution (120-Hour Horizon)")
+    st.subheader("Hourly Microclimate and Thermal Stress Evolution — 120-Hour Horizon")
     
     if not df_inf.empty and not df_wards.empty:
         target_ward = df_wards[df_wards['ward_name'] == chosen_ward].iloc[0] if 'chosen_ward' in locals() else df_wards.iloc[0]
@@ -1075,7 +1075,7 @@ with tab_timeline:
                 margin=dict(l=20, r=20, t=50, b=20)
             )
             st.plotly_chart(fig, use_container_width=True)
-            st.caption(f"ℹ️ The thermal gap depicts the localized Urban Heat Island bias (ΔT = {target_delta:+.2f}°C).")
+            st.caption(f"The thermal gap depicts the localized Urban Heat Island bias (ΔT = {target_delta:+.2f}°C).")
         else:
             st.info("Hourly time-series data not found for this zone.")
 
@@ -1100,22 +1100,22 @@ with tab_leaderboard:
 # TAB 3: THERMAL STRESS & AI SIMULATION LAB
 # ==============================================================================
 with tab_ailab:
-    st.subheader("🧪 Thermal Stress & AI Simulation Lab (What-If Policy Sandbox)")
+    st.subheader("Climate Scenario Simulation and Policy Evaluation")
     st.markdown("""
-    Simulate macro-climate shocks and civic interventions across all **272 MCD Wards** in real time.
-    Observe changes in physiological thermal stress (UTCI), senior citizen safety, and Delhi electric power grid cooling demand.
+    Simulate macro-climate forcing scenarios and civic intervention policies across all **272 MCD Wards** in real time.
+    Results indicate projected changes in physiological thermal stress (UTCI), senior citizen heat risk exposure, and estimated Delhi power grid cooling demand.
     """)
     
     col_sim_ctrl, col_sim_view = st.columns([4, 6])
     
     with col_sim_ctrl:
-        st.markdown("##### ⚙️ Policy & Climate Scenarios")
-        preset_names = ["🔧 Custom Scenario"] + list(PRESET_SCENARIOS.keys())
+        st.markdown("##### Policy & Climate Scenarios")
+        preset_names = ["Custom Scenario"] + list(PRESET_SCENARIOS.keys())
         chosen_preset = st.selectbox("Select Quick-Run Scenario Preset:", preset_names)
         
-        if chosen_preset != "🔧 Custom Scenario":
+        if chosen_preset != "Custom Scenario":
             cfg = PRESET_SCENARIOS[chosen_preset]
-            st.caption(f"ℹ️ **Profile:** {cfg['description']}")
+            st.caption(f"**Profile:** {cfg['description']}")
             def_amb = cfg['ambient_delta_c']
             def_rh = cfg['rh_delta_pct']
             def_wind = cfg['wind_delta_mps']
@@ -1128,13 +1128,13 @@ with tab_ailab:
             def_amb, def_rh, def_wind, def_solar = 0.0, 0.0, 0.0, 0.0
             def_aff, def_roof, def_mist, def_slum = 0.0, 0.0, 0.0, 0.0
             
-        with st.expander("🌡️ Macro-Climate & Atmospheric Forcing", expanded=True):
+        with st.expander("Macro-Climate & Atmospheric Parameters", expanded=True):
             sim_ambient = st.slider("Ambient Regional Temp Shift (ΔT °C):", -3.0, 5.0, float(def_amb), 0.5)
             sim_rh = st.slider("Relative Humidity Shift (ΔRH %):", -20.0, 30.0, float(def_rh), 5.0)
             sim_wind = st.slider("Wind Speed Anomaly (m/s):", -3.0, 3.0, float(def_wind), 0.5)
             sim_solar = st.slider("Solar Radiation Factor (W/m²):", -250.0, 250.0, float(def_solar), 50.0)
             
-        with st.expander("🏙️ Urban Planning & Policy Interventions", expanded=True):
+        with st.expander("Urban Planning & Physical Interventions", expanded=True):
             sim_afforest = st.slider("Miyawaki Urban Afforestation (% NDVI Growth):", 0.0, 50.0, float(def_aff), 5.0)
             sim_cool_roof = st.slider("Cool Roofs Reflective Coatings (% Roofs Painted White):", 0.0, 100.0, float(def_roof), 10.0)
             sim_misting = st.slider("Municipal Misting Cannons (units/km²):", 0.0, 5.0, float(def_mist), 0.5)
@@ -1154,7 +1154,7 @@ with tab_ailab:
         )
         
         if sim_results:
-            st.markdown("##### 📊 Real-Time Simulation Impact (Across 272 Wards)")
+            st.markdown("##### Real-Time Simulation Impact Analysis (272 Wards)")
             
             s1, s2, s3, s4 = st.columns(4)
             with s1:
@@ -1221,7 +1221,7 @@ with tab_ailab:
 # TAB 4: GERIATRIC (ELDERLY 60+) PROTECTION PLAN
 # ==============================================================================
 with tab_elderly:
-    st.subheader("👵 Geriatric (Elderly 60+) Microclimate Vulnerability & Clinical Action Plan")
+    st.subheader("Geriatric Microclimate Vulnerability & Clinical Action Plan")
     st.markdown("""
     Senior citizens represent Delhi’s most clinically fragile demographic during extreme heat due to
     diminished thirst perception, reduced sweating rate, and cardiovascular/diuretic medication interactions.
@@ -1230,7 +1230,7 @@ with tab_elderly:
     col_eld_table, col_eld_guidelines = st.columns([5, 5])
     
     with col_eld_table:
-        st.markdown("##### 📋 Ward Geriatric Priority Ranking")
+        st.markdown("##### Ward Geriatric Priority Ranking")
         if not df_wards.empty and 'elderly_population' in df_wards.columns:
             eld_df = df_wards[[
                 'ward_name', 'corporation', 'elderly_population', 
@@ -1241,23 +1241,23 @@ with tab_elderly:
             st.dataframe(eld_df, height=440, use_container_width=True)
             
     with col_eld_guidelines:
-        st.markdown("##### 🏥 Evidence-Based Geriatric Directives")
+        st.markdown("##### Evidence-Based Geriatric Directives")
         
-        with st.expander("💧 1. Mandatory Hydration Protocol", expanded=True):
+        with st.expander("1. Mandatory Hydration Protocol", expanded=True):
             st.markdown("""
             * **Thirst Sensation Impairment**: Seniors lose thirst awareness. Drink **150–200 ml fluids every 45–60 mins** regardless of thirst.
             * **Prescribed Fluids**: ORS, *nimbu paani*, coconut water, or buttermilk.
             * **Prohibited**: Avoid hot chai, coffee, and sugary sodas that accelerate fluid loss.
             """)
             
-        with st.expander("💊 2. Cardiovascular & Medication Caution", expanded=True):
+        with st.expander("2. Cardiovascular & Medication Precautions", expanded=True):
             st.markdown("""
             * **Diuretics & Antihypertensives**: Review prescriptions with doctors during heatwave warnings. Diuretics compound severe dehydration.
             * **Beta-Blockers**: Impair peripheral vasodilation and sweat response.
             * **Storage Safety**: Store insulin and cardiac medicines **below 25°C** (never near sun-facing walls or tin roofs).
             """)
             
-        with st.expander("🏠 3. Household Cooling & Sponging Technique", expanded=False):
+        with st.expander("3. Environmental Cooling Protocols", expanded=False):
             st.markdown("""
             * **Room Positioning**: Stay on ground floors or interior shaded rooms; keep blinds closed from 10:00 AM to 5:00 PM.
             * **Cold Sponging**: Apply cool damp towels to pulse points (neck, wrists, ankles) to rapidly lower core body heat.
@@ -1265,7 +1265,7 @@ with tab_elderly:
 
     # Bilingual Printable Action Card
     st.markdown("---")
-    st.markdown("##### 📄 Official Senior Citizen Heatwave Advisory Pamphlet (Bilingual English / Hindi)")
+    st.markdown("##### Official Senior Citizen Heatwave Advisory Pamphlet (Bilingual English / Hindi)")
     st.markdown("""<div style="background: rgba(30, 41, 59, 0.6); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 16px;">
 <h4 style="color:#60A5FA; margin-top:0;">[ENGLISH] MUNICIPAL CORPORATION OF DELHI — SENIOR CITIZEN HEAT ADVISORY</h4>
 <p style="font-size:0.85rem; color:#CBD5E1;">
@@ -1285,28 +1285,29 @@ with tab_elderly:
 </p>
 </div>""", unsafe_allow_html=True)
 
+
 # ==============================================================================
 # TAB 5: FREE MULTI-CHANNEL EMERGENCY BROADCAST
 # ==============================================================================
 with tab_messaging:
-    st.subheader("🚨 Free Emergency Multi-Channel Alert Dispatcher")
+    st.subheader("Emergency Multi-Channel Alert Dispatcher")
     st.markdown("""
-    **Zero-Cost Municipal Alert Layer**: Incorporates **100% free forever communication protocols**
-    (Telegram Bot API, CallMeBot WhatsApp, Free SMTP Email, and Municipal Cell Broadcast Simulation)
-    as a robust replacement for paid commercial gateways like Twilio.
+    **Municipal Emergency Communication Layer**: Incorporates open communication protocols
+    (Telegram Bot API, CallMeBot WhatsApp Gateway, SMTP Email Dispatch, and Municipal Cell Broadcast Simulation)
+    as a cost-effective, standards-compliant alternative to commercial messaging gateways.
     """)
     
     col_msg_ctrl, col_msg_hist = st.columns([5, 5])
     
     with col_msg_ctrl:
-        st.markdown("##### 📡 Select Free Communication Channel:")
+        st.markdown("##### Select Communication Channel:")
         selected_channel = st.radio(
             "Channel Architecture:",
             [
-                "📱 Telegram Bot API (100% Free & Unlimited)",
-                "💬 CallMeBot WhatsApp Gateway (Zero-Cost)",
-                "✉️ Free SMTP Emergency Email Dispatch",
-                "📡 Municipal Cell Broadcast (CBS) Simulator"
+                "Telegram Bot API (Public & Nodal Channels)",
+                "CallMeBot WhatsApp Gateway (Duty Officer Pager)",
+                "SMTP Emergency Email Dispatch (Nodal Officers & Hospitals)",
+                "Municipal Cell Broadcast (CBS Simulator)"
             ]
         )
         
@@ -1315,7 +1316,7 @@ with tab_messaging:
         
         # 1. TELEGRAM BOT
         if "Telegram" in selected_channel:
-            st.info("Telegram Bot API provides unlimited automated push messaging to emergency channels or citizens with zero subscription cost.")
+            st.info("Telegram Bot API provides automated push messaging to emergency channels or citizens with zero subscription cost.")
             tg_token = st.text_input("Telegram Bot Token (from @BotFather):", placeholder="e.g. 123456789:ABCdefGhIJKlmNoPQRsTUVwxyZ")
             tg_chat = st.text_input("Destination Chat ID / Channel Username:", placeholder="e.g. @delhi_heat_alerts")
             
@@ -1331,17 +1332,17 @@ with tab_messaging:
                 shelter=ward_info.get('cooling_shelter', 'MCD Community Shelter')
             )
             
-            with st.expander("👁️ Preview Telegram Markdown Alert:", expanded=True):
+            with st.expander("Preview Telegram Markdown Alert:", expanded=True):
                 st.code(tg_msg, language="markdown")
                 
-            if st.button("🚀 Dispatch Live Telegram Broadcast"):
+            if st.button("Transmit Live Telegram Broadcast"):
                 if not tg_token or not tg_chat:
-                    st.warning("⚠️ Enter Bot Token and Chat ID to transmit live.")
+                    st.warning("Enter Bot Token and Chat ID to transmit live.")
                 else:
                     ok, msg = alert_dispatcher.send_telegram_alert(tg_token, tg_chat, tg_msg)
                     if ok:
                         trigger_audio_siren()
-                        st.success(f"✅ {msg}")
+                        st.success(f"{msg}")
                         alert_dispatcher.log_broadcast_event(
                             channel="Telegram Bot",
                             recipient_type="Public Channel",
@@ -1354,11 +1355,11 @@ with tab_messaging:
                             message_snippet=tg_msg
                         )
                     else:
-                        st.error(f"❌ {msg}")
+                        st.error(f"{msg}")
 
         # 2. CALLMEBOT WHATSAPP
         elif "CallMeBot" in selected_channel:
-            st.info("CallMeBot sends automated WhatsApp alerts without Twilio per-message fees.")
+            st.info("CallMeBot sends automated WhatsApp escalation alerts without Twilio per-message fees.")
             wa_phone = st.text_input("Recipient Phone (+91...):", value="+91", placeholder="+919876543210")
             wa_key = st.text_input("CallMeBot Personal API Key:", type="password", placeholder="Personal API Key")
             
@@ -1372,19 +1373,19 @@ with tab_messaging:
                 cooling_shelter=ward_info.get('cooling_shelter')
             )
             
-            with st.expander("👁️ Preview WhatsApp Message:", expanded=True):
+            with st.expander("Preview WhatsApp Message:", expanded=True):
                 st.text(wa_msg)
                 
-            if st.button("🚀 Dispatch Free WhatsApp Alert"):
+            if st.button("Transmit WhatsApp Alert"):
                 if not wa_phone or not wa_key:
-                    st.warning("⚠️ Enter phone number and CallMeBot API key.")
+                    st.warning("Enter phone number and CallMeBot API key.")
                 else:
                     ok, msg = alert_dispatcher.send_whatsapp_alert(wa_phone, wa_key, wa_msg)
                     if ok:
                         trigger_audio_siren()
-                        st.success(f"✅ {msg}")
+                        st.success(f"{msg}")
                     else:
-                        st.error(f"❌ {msg}")
+                        st.error(f"{msg}")
 
         # 3. FREE SMTP EMAIL
         elif "SMTP" in selected_channel:
@@ -1395,22 +1396,22 @@ with tab_messaging:
             em_pass = st.text_input("App Password:", type="password")
             em_to = st.text_input("Recipients (comma-separated):", placeholder="health@mcd.gov.in, hospital@delhi.gov.in")
             
-            if st.button("🚀 Dispatch Email Disaster Bulletin"):
+            if st.button("Dispatch Email Disaster Bulletin"):
                 if not em_user or not em_pass or not em_to:
-                    st.warning("⚠️ Enter sender credentials and recipient list.")
+                    st.warning("Enter sender credentials and recipient list.")
                 else:
                     recipients = [e.strip() for e in em_to.split(",") if e.strip()]
-                    html_content = f"<h2>🚨 MCD HEAT DISASTER BULLETIN: {ward_info['ward_name']}</h2><p><b>Thermal Stress:</b> {ward_info['risk_level']} (UTCI {ward_info['utci']}°C)</p><p><b>Directives:</b> {ward_info['measures']}</p>"
+                    html_content = f"<h2>[MCD HEAT DISASTER BULLETIN] {ward_info['ward_name']}</h2><p><b>Thermal Stress:</b> {ward_info['risk_level']} (UTCI {ward_info['utci']}°C)</p><p><b>Directives:</b> {ward_info['measures']}</p>"
                     ok, msg = alert_dispatcher.send_emergency_email(em_server, em_port, em_user, em_pass, recipients, f"{ward_info['risk_level']} Alert for {ward_info['ward_name']}", html_content)
                     if ok:
-                        st.success(f"✅ {msg}")
+                        st.success(f"{msg}")
                     else:
-                        st.error(f"❌ {msg}")
+                        st.error(f"{msg}")
 
         # 4. MUNICIPAL CELL BROADCAST (CBS)
         else:
             st.info("Simulates national emergency cell tower push (CAP/CBS) sent to all mobile devices in the ward's geospatial polygon.")
-            cbs_scope = st.radio("Broadcast Target Scope:", [f"🎯 Target Selected Ward: {ward_info['ward_name']}", "🚨 All 272 Wards Under Critical/Extreme Alert"], horizontal=True)
+            cbs_scope = st.radio("Broadcast Target Scope:", [f"Target Selected Ward: {ward_info['ward_name']}", "All 272 Wards Under Critical/Extreme Alert"], horizontal=True)
             
             cbs_msg = alert_dispatcher.build_emergency_sms_text(
                 ward_name=ward_info['ward_name'] if "Target" in cbs_scope else "ALL CRITICAL WARDS (DELHI-NCR)",
@@ -1424,7 +1425,7 @@ with tab_messaging:
             
             st.text_area("CAP Emergency Message Payload:", value=cbs_msg, height=120)
             
-            if st.button("🚨 Broadcast Live Cell Broadcast (CBS) Alert"):
+            if st.button("Transmit Live Cell Broadcast (CBS) Alert"):
                 trigger_audio_siren()
                 pop_count = int(ward_info.get('total_population', 65000)) if "Target" in cbs_scope else int(df_wards[df_wards['risk_level'].isin(['Critical Heat', 'Extreme Danger'])]['total_population'].sum() if 'total_population' in df_wards.columns else 2400000)
                 eld_count = int(ward_info.get('elderly_population', 7000)) if "Target" in cbs_scope else int(df_wards[df_wards['risk_level'].isin(['Critical Heat', 'Extreme Danger'])]['elderly_population'].sum() if 'elderly_population' in df_wards.columns else 250000)
@@ -1440,10 +1441,10 @@ with tab_messaging:
                     status="Delivered (200 OK)",
                     message_snippet=cbs_msg
                 )
-                st.success(f"🚨 Cell Broadcast dispatched! {pop_count:,} mobile handsets alerted via cellular towers.")
+                st.success(f"Cell Broadcast dispatched! {pop_count:,} mobile handsets alerted via cellular towers.")
 
     with col_msg_hist:
-        st.markdown("##### 📜 Emergency Broadcast History (Audit Trail)")
+        st.markdown("##### Emergency Broadcast History (Audit Trail)")
         hist_df = alert_dispatcher.get_broadcast_history()
         if not hist_df.empty:
             st.dataframe(
@@ -1464,7 +1465,7 @@ with tab_diagnostics:
     col_d_metrics, col_d_plot = st.columns([5, 5])
     
     with col_d_metrics:
-        st.markdown("##### 🧠 XGBoost Microclimate Bias Model Performance")
+        st.markdown("##### XGBoost Microclimate Bias Model Performance")
         st.markdown("""<div style="display:grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 14px;">
 <div class="stress-card">
 <h5>Validation RMSE</h5>
@@ -1491,7 +1492,7 @@ with tab_diagnostics:
         """)
         
     with col_d_plot:
-        st.markdown("##### 📈 Test Accuracy Regression Plot")
+        st.markdown("##### Test Accuracy Regression Plot")
         plot_path = os.path.join(MODELS_DIR, "test_accuracy.png")
         if os.path.exists(plot_path):
             st.image(plot_path, caption="XGBoost Delta T Bias Regression on Test Set")
@@ -1502,7 +1503,7 @@ with tab_diagnostics:
 # TAB 7: NDMA FRAMEWORK & ACTION PROTOCOLS
 # ==============================================================================
 with tab_framework:
-    st.subheader("🏛️ City Administration Action Protocols (NDMA / HAP)")
+    st.subheader("City Administration Action Protocols (NDMA / HAP)")
     st.markdown("""
     The system complies with National Disaster Management Authority (NDMA) guidelines and ISO 7243 standards:
     - **Hazard Score (50%)**: Derived from Universal Thermal Climate Index (UTCI) and Wet Bulb Globe Temperature (WBGT).

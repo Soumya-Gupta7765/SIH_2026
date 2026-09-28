@@ -138,7 +138,7 @@ def send_emergency_email(smtp_server: str, smtp_port: int, sender_email: str,
     
     try:
         msg = MIMEMultipart("alternative")
-        msg["Subject"] = f"🚨 [MCD HEAT DISASTER ALERT] {subject}"
+        msg["Subject"] = f"[MCD HEAT DISASTER ALERT] {subject}"
         msg["From"] = f"Sirens of Summer Emergency Control <{sender_email}>"
         msg["To"] = ", ".join(recipient_emails)
         
@@ -163,11 +163,11 @@ def build_emergency_sms_text(ward_name: str, corporation: str, temp_c: float,
     """Creates a concise, high-urgency SMS/Push alert text."""
     shelter_str = f"\nNearest AC Shelter: {cooling_shelter}" if cooling_shelter else ""
     return (
-        f"🚨 MCD EMERGENCY HEAT ALERT: {ward_name}\n"
+        f"[MCD EMERGENCY HEAT ALERT] {ward_name}\n"
         f"Condition: {risk_level.upper()} (UTCI {utci_c:.1f}°C, Ambient {temp_c:.1f}°C)\n"
         f"Order: {action_summary}\n"
         f"Halt non-essential outdoor work 11am-4pm. Drink ORS/water every 45m.{shelter_str}\n"
-        f"Dial 108 for Heat-Stroke Emergency | Delhi Disaster Control"
+        f"Emergency Helpline: 108 | Delhi Disaster Management Control"
     )
 
 def build_elderly_protection_alert(ward_name: str, elderly_count: int,
@@ -175,36 +175,37 @@ def build_elderly_protection_alert(ward_name: str, elderly_count: int,
                                   cooling_shelter: str = "MCD Community Health Center") -> str:
     """Creates a specialized Geriatric Heat Protection alert text."""
     return (
-        f"👵 SENIOR CITIZEN HEAT ADVISORY — {ward_name}\n"
-        f"⚠️ Extreme Thermal Threat for {elderly_count:,} Senior Citizens (UTCI {utci_c:.1f}°C)\n\n"
-        f"CRITICAL ACTION FOR ELDERLY & CAREGIVERS:\n"
+        f"[SENIOR CITIZEN HEAT ADVISORY] {ward_name}\n"
+        f"Severity: {risk_level.upper()} - Thermal Threat for {elderly_count:,} Senior Citizens (UTCI {utci_c:.1f}°C)\n\n"
+        f"MANDATORY ACTIONS FOR ELDERLY & CAREGIVERS:\n"
         f"1. Stay indoors in lowest floor shaded rooms from 10:00 AM - 5:00 PM.\n"
-        f"2. Hydrate: Drink 150-200ml ORS/lemon water every 45 mins. Avoid hot tea/coffee.\n"
+        f"2. Hydration: Drink 150-200ml ORS/lemon water every 45 mins. Avoid hot tea/coffee.\n"
         f"3. Medication Watch: Consult doctor for diuretic/BP dose timing; store meds <25°C.\n"
         f"4. Sponge neck & wrists with cold water compresses.\n"
-        f"5. Free AC Shelter: {cooling_shelter} (Open 24/7 with doctors on site).\n"
-        f"🚨 Red Flags: Confusion, hot dry skin, dizziness -> Call 108 / 14567 Immediately!"
+        f"5. Free AC Shelter: {cooling_shelter} (Open 24/7 with medical staff on site).\n"
+        f"Emergency SOS: Confusion, hot dry skin, dizziness -> Call 108 / 14567 Immediately!"
     )
 
 def build_telegram_broadcast_markdown(ward_name: str, corp: str, temp_c: float,
                                       delta_t: float, utci_c: float, risk_level: str,
                                       action: str, elderly_pop: int, shelter: str) -> str:
     """Rich markdown for Telegram emergency channel."""
-    severity_emoji = "🚨" if utci_c >= 43 else "🔥" if utci_c >= 38 else "⚠️"
+    severity_prefix = "[CRITICAL DISASTER BROADCAST]" if utci_c >= 43 else "[HIGH HEAT ADVISORY]" if utci_c >= 38 else "[WEATHER WATCH]"
     return (
-        f"{severity_emoji} *MCD HEATWAVE EARLY WARNING BROADCAST*\n"
-        f"━━━━━━━━━━━━━━━━━━━━━━\n"
-        f"🏛️ *Target Region:* `{ward_name}`\n"
-        f"🏢 *Jurisdiction:* {corp}\n"
-        f"⏱️ *Disaster Severity:* *{risk_level.upper()}*\n\n"
-        f"🌡️ *Microclimate Temp:* `{temp_c:.1f}°C` (UHI Bias: `+{delta_t:.1f}°C`)\n"
-        f"🔥 *Physiological Thermal Stress (UTCI):* `{utci_c:.1f}°C`\n"
-        f"👵 *At-Risk Senior Citizens (60+):* `{elderly_pop:,}` residents\n\n"
-        f"📋 *MUNICIPAL DIRECTIVES:*\n"
+        f"*{severity_prefix}*\n"
+        f"MCD HEATWAVE EARLY WARNING DIRECTIVE\n"
+        f"------------------------------------\n"
+        f"*Target Region:* `{ward_name}`\n"
+        f"*Jurisdiction:* {corp}\n"
+        f"*Disaster Severity Level:* *{risk_level.upper()}*\n\n"
+        f"*Microclimate Temp:* `{temp_c:.1f}°C` (UHI Bias: `+{delta_t:.1f}°C`)\n"
+        f"*Physiological Thermal Stress (UTCI):* `{utci_c:.1f}°C`\n"
+        f"*At-Risk Senior Population (60+):* `{elderly_pop:,}` residents\n\n"
+        f"*MUNICIPAL DIRECTIVES:*\n"
         f"• {action}\n"
         f"• Mandatory work stoppage for outdoor construction/laborers\n"
         f"• ORS hydration booths operational at metro & bus terminals\n\n"
-        f"🏥 *Designated Cooling Shelter:*\n"
-        f"📍 _{shelter}_\n\n"
-        f"📞 *Emergency Helplines:* `108` (Ambulance) | `1077` (Disaster Relief) | `14567` (Elderly SOS)"
+        f"*Designated Emergency Cooling Facility:*\n"
+        f"_{shelter}_\n\n"
+        f"*Emergency Helplines:* `108` (Ambulance) | `1077` (Disaster Relief) | `14567` (Senior Citizen SOS)"
     )
